@@ -5,10 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -44,7 +46,13 @@ fun EditTextExample(texto: String) {
     ConstraintLayout(Modifier.fillMaxSize()) {
         val viewModel: EditTextViewModel = viewModel()
 
-        val (nameTextField, nameText, boxBlue) = createRefs()
+        val (nameTextField, nameTextField2, nameText, boxBlue) = createRefs()
+
+
+        Column {
+            Text(text = "Información Personal ")
+        }
+
 
         TextField(
             label = { Text(texto) },
@@ -53,34 +61,30 @@ fun EditTextExample(texto: String) {
                 viewModel.textState.value = it
             },
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
+                .padding(start=50.dp,top=30.dp)
+                .width(250.dp)
                 .border(1.dp, Color.Gray)
                 .padding(16.dp)
                 .constrainAs(nameTextField) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
                     start.linkTo(parent.start)
-                    end.linkTo(parent.end)
                 }
         )
 
-        Text(modifier = Modifier.constrainAs(nameText) {
-            top.linkTo(parent.bottom)
-            bottom.linkTo(parent.bottom)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        }, text = "Text")
-
-        Text(modifier = Modifier
-            .size(100.dp)
-            .background(Color.Blue)
-            .constrainAs(boxBlue) {
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.top)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }, text = "nameText")
+        TextField(
+            label = { Text(texto) },
+            value = viewModel.textState.value,
+            onValueChange = {
+                viewModel.textState.value = it
+            },
+            modifier = Modifier
+                .padding(start=50.dp,top=30.dp)
+                .width(250.dp)
+                .border(1.dp, Color.Gray)
+                .padding(16.dp)
+                .constrainAs(nameTextField2) {
+                    top.linkTo(nameTextField.bottom)
+                }
+        )
     }
 }
 
