@@ -149,7 +149,7 @@ fun GenderRadioButtonGroup(
         Spacer(modifier = Modifier.width(10.dp))
         Text(
             fontWeight = FontWeight.Bold,
-            text = "Sexo:"
+            text = stringResource(R.string.sex)
         )
 
         options.forEach { text ->
