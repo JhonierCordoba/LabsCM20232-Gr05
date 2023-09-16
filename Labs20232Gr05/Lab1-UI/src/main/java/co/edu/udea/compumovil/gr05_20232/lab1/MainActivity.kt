@@ -34,61 +34,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    EditTextExample(getString(R.string.hello))
+                    PersonalData()
                 }
             }
         }
     }
 }
 
-@Composable
-fun EditTextExample(texto: String) {
-    ConstraintLayout(Modifier.fillMaxSize()) {
-        val viewModel: EditTextViewModel = viewModel()
 
-        val (nameTextField, nameTextField2, nameText, boxBlue) = createRefs()
-
-
-        Column {
-            Text(text = "Información Personal ")
-        }
-
-
-        TextField(
-            label = { Text(texto) },
-            value = viewModel.textState.value,
-            onValueChange = {
-                viewModel.textState.value = it
-            },
-            modifier = Modifier
-                .padding(start=50.dp,top=30.dp)
-                .width(250.dp)
-                .border(1.dp, Color.Gray)
-                .padding(16.dp)
-                .constrainAs(nameTextField) {
-                    start.linkTo(parent.start)
-                }
-        )
-
-        TextField(
-            label = { Text(texto) },
-            value = viewModel.textState.value,
-            onValueChange = {
-                viewModel.textState.value = it
-            },
-            modifier = Modifier
-                .padding(start=50.dp,top=30.dp)
-                .width(250.dp)
-                .border(1.dp, Color.Gray)
-                .padding(16.dp)
-                .constrainAs(nameTextField2) {
-                    top.linkTo(nameTextField.bottom)
-                }
-        )
-    }
-}
-
-// ViewModel to hold the text state
-class EditTextViewModel : ViewModel() {
-    val textState = mutableStateOf("")
-}
