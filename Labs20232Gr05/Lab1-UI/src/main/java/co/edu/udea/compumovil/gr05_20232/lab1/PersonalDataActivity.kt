@@ -5,8 +5,10 @@ import android.app.DatePickerDialog
 import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.DatePicker
+import android.widget.Spinner
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import co.edu.udea.compumovil.gr05_20232.lab1.ui.theme.Labs20232Gr05Theme
 import java.util.Calendar
 import java.util.Date
@@ -62,14 +65,32 @@ fun PersonalData() {
             Text("Landscape")
         }
         else -> {
-            Column {
-                Title()
-                DividerComponent()
-                NameField(name) { name = it }
-                LastNameField(lastName) { lastName = it }
-                GenderRadioButtonGroup(sexOptions, sexSelectedOption)
-                DateOfBirthComponent()
+            ConstraintLayout {
+                val (form, button) = createRefs()
+                Column(modifier = Modifier.constrainAs(form){
+                    top.linkTo(parent.top)
+                }
+                    ) {
+                    Title()
+                    DividerComponent()
+                    NameField(name) { name = it }
+                    LastNameField(lastName) { lastName = it }
+                    GenderRadioButtonGroup(sexOptions, sexSelectedOption)
+                    DateOfBirthComponent()
+                    ScholarGradeSpinner()
+                }
+                Button(onClick = {
+
+                },
+                    modifier = Modifier.constrainAs(button){
+                      bottom.linkTo(parent.bottom, margin = 5.dp)
+                      end.linkTo(parent.end, margin = 5.dp)
+                    },
+                    colors = ButtonDefaults.buttonColors() ) {
+                    Text(text = stringResource(R.string.next), color = Color.White)
+                }
             }
+
         }
     }
 
@@ -227,6 +248,45 @@ fun DateOfBirthComponent() {
     }
 }
 
+@Composable
+fun ScholarGradeSpinner(){
+    var expanded by remember { mutableStateOf(false) }
+    val scholarGrade = stringResource(R.string.scholar_grade)
+    val items = listOf(stringResource(R.string.elementary), stringResource(R.string.secondary), stringResource(R.string.university), stringResource(R.string.other))
+    var selectedItem by remember { mutableStateOf(scholarGrade) }
+
+    Box(
+        modifier = Modifier
+            .width(
+                300
+                    .dp
+            )
+            .padding(16.dp)
+    ) {
+        Text(
+            text = selectedItem,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = { expanded = true })
+                .border(2.dp, Color.Gray)
+                .padding(16.dp)
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            items.forEach { label ->
+                DropdownMenuItem(onClick = {
+                    selectedItem = label
+                    expanded = false
+                }) {
+                    Text(text = label)
+                }
+            }
+        }
+    }
+}
 @Preview
 @Composable
 fun ShowPersonalData(){

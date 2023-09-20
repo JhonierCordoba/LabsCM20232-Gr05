@@ -16,4 +16,8 @@
     <string name="address">Address</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="elementary">Elementary</string>
+    <string name="secondary">Secondary</string>
+    <string name="university">University</string>
+    <string name="other">Other</string>
 </resources>
