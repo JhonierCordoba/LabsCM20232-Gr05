@@ -1,8 +1,10 @@
 package co.edu.udea.compumovil.gr05_20232.lab1
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.content.res.Configuration
 import android.os.Bundle
+import android.widget.DatePicker
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.border
@@ -10,6 +12,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
@@ -17,11 +20,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.edu.udea.compumovil.gr05_20232.lab1.ui.theme.Labs20232Gr05Theme
+import java.util.Calendar
+import java.util.Date
 
 class PersonalDataActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,10 +46,11 @@ class PersonalDataActivity : ComponentActivity() {
     }
 }
 
+
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun PersonalData() {
-    val sexOptions = listOf("Hombre", "Mujer")
+    val sexOptions = listOf(stringResource(R.string.male), stringResource(R.string.female))
     val sexSelectedOption = ""
     val configuration = LocalConfiguration.current
 
@@ -54,12 +62,13 @@ fun PersonalData() {
             Text("Landscape")
         }
         else -> {
-            Column() {
-                PersonalTitle()
+            Column {
+                Title()
                 DividerComponent()
                 NameField(name) { name = it }
                 LastNameField(lastName) { lastName = it }
                 GenderRadioButtonGroup(sexOptions, sexSelectedOption)
+                DateOfBirthComponent()
             }
         }
     }
@@ -68,7 +77,7 @@ fun PersonalData() {
 }
 
 @Composable
-fun PersonalTitle() {
+fun Title() {
     Text(
         text = stringResource(R.string.title_activity_personal_data),
         style = MaterialTheme.typography.h5, color = Color.Gray,
@@ -142,7 +151,7 @@ fun GenderRadioButtonGroup(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .padding(start = 10.dp, top = 20.dp)
+            .padding(start = 10.dp, top = 10.dp)
             .fillMaxWidth()
     ) {
         Icon(imageVector = Icons.Default.People , contentDescription = null)
@@ -166,6 +175,62 @@ fun GenderRadioButtonGroup(
             }
         }
     }
+}
+
+@Composable
+fun DateOfBirthComponent() {
+    val mContext = LocalContext.current
+
+    val mYear: Int
+    val mMonth: Int
+    val mDay: Int
+    val dateText = stringResource(R.string.date_of_birth)
+
+
+    val mCalendar = Calendar.getInstance()
+
+    mYear = mCalendar.get(Calendar.YEAR)
+    mMonth = mCalendar.get(Calendar.MONTH)
+    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+
+    mCalendar.time = Date()
+
+
+    val mDate = remember { mutableStateOf(dateText) }
+
+    val mDatePickerDialog = DatePickerDialog(
+        mContext,
+        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+            mDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
+        }, mYear, mMonth, mDay
+    )
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(start = 10.dp, top = 10.dp)
+            .fillMaxWidth()
+    ) {
+        Icon(imageVector = Icons.Default.Cake , contentDescription = null)
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(
+            fontWeight = FontWeight.Bold,
+            text = mDate.value
+        )
+        Spacer(modifier = Modifier.width(10.dp))
+        Button(onClick = {
+            mDatePickerDialog.show()
+        },
+            colors = ButtonDefaults.buttonColors() ) {
+            Text(text = stringResource(R.string.change), color = Color.White)
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ShowPersonalData(){
+    PersonalData()
 }
 
 
