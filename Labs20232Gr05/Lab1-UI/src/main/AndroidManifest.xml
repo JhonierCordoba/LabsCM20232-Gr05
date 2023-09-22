@@ -4,6 +4,7 @@
 
     <application
         android:allowBackup="true"
+        android:windowSoftInputMode="adjustPan"
         android:icon="@mipmap/ic_launcher_contact"
         android:label="@string/app_name"
         android:supportsRtl="true"

@@ -171,7 +171,7 @@ fun TextFieldComponent(
     onTextChange: (String) -> Unit,
     labelText: String,
     keyboardType: KeyboardType,
-    required: Boolean = false
+    required: Boolean = false,
 ) {
     Column{
         Text(
@@ -184,7 +184,7 @@ fun TextFieldComponent(
         TextField(
             value = text,
             maxLines = 1,
-            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = ImeAction.Next),
             onValueChange = onTextChange,
             modifier = Modifier
                 .width(250.dp)
@@ -194,10 +194,10 @@ fun TextFieldComponent(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 cursorColor = Color.Gray
-            )
+            ),
+            singleLine = true
         )
     }
-
 }
 
 @Composable
