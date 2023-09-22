@@ -2,13 +2,12 @@ package co.edu.udea.compumovil.gr05_20232.lab1
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.DatePicker
-import android.widget.Spinner
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -29,10 +28,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
+import co.edu.udea.compumovil.gr05_20232.lab1.navigation.AppScreens
 import co.edu.udea.compumovil.gr05_20232.lab1.ui.theme.Labs20232Gr05Theme
 import java.util.Calendar
 import java.util.Date
 
+/*
 class PersonalDataActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,11 +50,11 @@ class PersonalDataActivity : ComponentActivity() {
         }
     }
 }
-
+*/
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun PersonalData() {
+fun PersonalData(navController: NavController) {
     val sexOptions = listOf(stringResource(R.string.male), stringResource(R.string.female))
     val sexSelectedOption = ""
     val configuration = LocalConfiguration.current
@@ -70,7 +72,7 @@ fun PersonalData() {
                 Column(modifier = Modifier.constrainAs(form){
                     top.linkTo(parent.top)
                 }
-                    ) {
+                ) {
                     Title()
                     DividerComponent()
                     NameField(name) { name = it }
@@ -79,15 +81,17 @@ fun PersonalData() {
                     DateOfBirthComponent()
                     ScholarGradeSpinner()
                 }
-                Button(onClick = {
-
-                },
-                    modifier = Modifier.constrainAs(button){
-                      bottom.linkTo(parent.bottom, margin = 5.dp)
-                      end.linkTo(parent.end, margin = 5.dp)
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.End
+                ){
+                    Button(onClick = {
+                        navController.navigate(route = AppScreens.ContactDataScreen.route)
                     },
-                    colors = ButtonDefaults.buttonColors() ) {
-                    Text(text = stringResource(R.string.next), color = Color.White)
+                        colors = ButtonDefaults.buttonColors() ) {
+                        Text(text = stringResource(R.string.next), color = Color.White)
+                    }
                 }
             }
 
@@ -138,8 +142,8 @@ fun LastNameField(
     onLastNameChange: (String) -> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically,
-    modifier = Modifier
-        .padding(start = 10.dp, top = 20.dp)){
+        modifier = Modifier
+            .padding(start = 10.dp, top = 20.dp)){
         Icon(imageVector = Icons.Default.Person , contentDescription = null)
         Spacer(modifier = Modifier.width(10.dp))
         TextFieldComponent(lastName, onLastNameChange, stringResource(R.string.last_name))
@@ -287,11 +291,11 @@ fun ScholarGradeSpinner(){
         }
     }
 }
-@Preview
-@Composable
-fun ShowPersonalData(){
-    PersonalData()
-}
+//@Preview
+//@Composable
+//fun ShowPersonalData(){
+    //PersonalData()
+//}
 
 
 

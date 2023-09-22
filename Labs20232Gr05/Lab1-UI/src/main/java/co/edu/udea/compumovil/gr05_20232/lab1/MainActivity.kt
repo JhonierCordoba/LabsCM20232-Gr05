@@ -19,10 +19,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import co.edu.udea.compumovil.gr05_20232.lab1.navigation.AppNavigarion
 import co.edu.udea.compumovil.gr05_20232.lab1.ui.theme.Labs20232Gr05Theme
 
 class MainActivity : ComponentActivity() {
@@ -34,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    PersonalData()
+                    AppNavigarion()
                 }
             }
         }
@@ -42,3 +44,10 @@ class MainActivity : ComponentActivity() {
 }
 
 
+@Preview
+@Composable
+fun DefaultPreview(){
+    Labs20232Gr05Theme{
+        AppNavigarion()
+    }
+}
