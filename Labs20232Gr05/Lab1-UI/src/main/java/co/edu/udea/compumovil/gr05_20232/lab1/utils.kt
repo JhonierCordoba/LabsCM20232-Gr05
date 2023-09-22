@@ -3,7 +3,6 @@ package co.edu.udea.compumovil.gr05_20232.lab1
 
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -14,35 +13,23 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 
 @Composable
-fun AutoComplete() {
-
-    val categories = listOf("Argentina", "Bolivia", "Brasil", "Chile", "Colombia", "Costa Rica", "Cuba", "Ecuador", "Mexico")
-
-    var category by remember {
-        mutableStateOf("")
-    }
-
-    val heightTextFields by remember {
-        mutableStateOf(55.dp)
-    }
-
+fun AutoComplete(dropdownItems :List<String>, name: String, category: MutableState<String>) {
     var textFieldSize by remember {
         mutableStateOf(Size.Zero)
     }
@@ -57,8 +44,6 @@ fun AutoComplete() {
     // Category Field
     Column(
         modifier = Modifier
-            .padding(30.dp)
-            .fillMaxWidth()
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -70,40 +55,39 @@ fun AutoComplete() {
 
         Text(
             modifier = Modifier.padding(start = 3.dp, bottom = 2.dp),
-            text = "Category",
+            text = name,
             fontSize = 16.sp,
-            color = Color.Black,
+            color = Color.Gray,
             fontWeight = FontWeight.Medium
         )
 
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column {
 
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row {
                 TextField(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(heightTextFields)
+                        .width(250.dp)
                         .border(
                             width = 1.8.dp,
-                            color = Color.Black,
+                            color = Color.Gray,
                             shape = RoundedCornerShape(15.dp)
                         )
                         .onGloballyPositioned { coordinates ->
                             textFieldSize = coordinates.size.toSize()
                         },
-                    value = category,
+                    value = category.value,
                     onValueChange = {
-                        category = it
+                        category.value = it
                         expanded = true
                     },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
-                        cursorColor = Color.Black
+                        cursorColor = Color.Gray
                     ),
                     textStyle = TextStyle(
-                        color = Color.Black,
+                        color = Color.Gray,
                         fontSize = 16.sp
                     ),
                     keyboardOptions = KeyboardOptions(
@@ -117,7 +101,7 @@ fun AutoComplete() {
                                 modifier = Modifier.size(24.dp),
                                 imageVector = Icons.Rounded.KeyboardArrowDown,
                                 contentDescription = "arrow",
-                                tint = Color.Black
+                                tint = Color.Gray
                             )
                         }
                     }
@@ -127,8 +111,7 @@ fun AutoComplete() {
             AnimatedVisibility(visible = expanded) {
                 Card(
                     modifier = Modifier
-                        .padding(horizontal = 5.dp)
-                        .width(textFieldSize.width.dp),
+                        .width(250.dp),
                     elevation = 15.dp,
                     shape = RoundedCornerShape(10.dp)
                 ) {
@@ -137,26 +120,26 @@ fun AutoComplete() {
                         modifier = Modifier.heightIn(max = 150.dp),
                     ) {
 
-                        if (category.isNotEmpty()) {
+                        if (category.value.isNotEmpty()) {
                             items(
-                                categories.filter {
+                                dropdownItems.filter {
                                     it.lowercase()
-                                        .contains(category.lowercase()) || it.lowercase()
+                                        .contains(category.value.lowercase()) || it.lowercase()
                                         .contains("others")
                                 }
                                     .sorted()
                             ) {
                                 CategoryItems(title = it) { title ->
-                                    category = title
+                                    category.value = title
                                     expanded = false
                                 }
                             }
                         } else {
                             items(
-                                categories.sorted()
+                                dropdownItems.sorted()
                             ) {
                                 CategoryItems(title = it) { title ->
-                                    category = title
+                                    category.value = title
                                     expanded = false
                                 }
                             }
@@ -170,8 +153,59 @@ fun AutoComplete() {
         }
 
     }
+}
 
+@Composable
+fun IconComponent(icon: ImageVector,
+                  textFielIcon: Boolean = false) {
+    Icon(
+        imageVector = icon,
+        contentDescription = null,
+        Modifier.padding(top = if (textFielIcon) 20.dp else 0.dp, end = 10.dp)
+    )
+}
 
+@Composable
+fun TextFieldComponent(
+    text: String,
+    onTextChange: (String) -> Unit,
+    labelText: String,
+    keyboardType: KeyboardType,
+    required: Boolean = false
+) {
+    Column{
+        Text(
+            modifier = Modifier.padding(start = 3.dp, bottom = 2.dp),
+            text = if (required) "$labelText*" else labelText,
+            fontSize = 15.sp,
+            color = Color.Gray,
+            fontWeight = FontWeight.Medium
+        )
+        TextField(
+            value = text,
+            maxLines = 1,
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            onValueChange = onTextChange,
+            modifier = Modifier
+                .width(250.dp)
+                .border(1.8.dp, Color.Gray, shape = RoundedCornerShape(15.dp)),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                cursorColor = Color.Gray
+            )
+        )
+    }
+
+}
+
+@Composable
+fun DividerComponent() {
+    Divider(
+        color = Color.Gray,
+        thickness = 1.dp,
+    )
 }
 
 @Composable
@@ -182,7 +216,7 @@ fun CategoryItems(
 
     Row(
         modifier = Modifier
-            .fillMaxWidth()
+            .width(250.dp)
             .clickable {
                 onSelect(title)
             }
